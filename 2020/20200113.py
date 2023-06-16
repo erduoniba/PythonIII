@@ -5,10 +5,9 @@ first project
 hello,world
 """
 
-print("hello, world")
-
-
+import math
 import this
+print("hello, world")
 
 
 """
@@ -66,7 +65,6 @@ ax *= bx + 200
 print('ax : ', ax)
 
 
-
 """
 华氏温度转换为摄氏温度。
 华氏温度到摄氏温度的转换公式为：$C=(F - 32) \div 1.8$。
@@ -77,19 +75,15 @@ c = (f - 32)/1.8
 print("%0.3f华氏温度，对应的摄氏温度为:%0.3f" % (f, c))
 
 
-
-
 """
 输入半径计算圆的周长和面积
 """
 
-import math
 
 radius = 100
 perimeter = 2 * math.pi * radius
 area = math.pi * radius * radius
 print("%0.3f半径的周长是:%0.3f, 面积是:%0.3f" % (radius, perimeter, area))
-
 
 
 """
@@ -102,8 +96,6 @@ year = 2021
 is_leap = (year % 4 == 0 and year % 100 != 0) or (year % 400 == 0)
 ll = "否"
 if is_leap:
-	ll = "是"
-	pass
+    ll = "是"
+    pass
 print("%d年是不是闰年:%s" % (year, ll))
-
-
