@@ -72,6 +72,7 @@ def convert_octal_to_hex(input_str):
         hex_number = octal_to_hex(octal_number)
 
         hex_str = "\\" + hex_number
+        # 这里是做替换操作，避免丢失空格
         input_str = input_str.replace("\\" + octal_number, hex_str)
     return input_str
 
@@ -112,7 +113,8 @@ def translate_cstring(cstring_file):
     all_strings = []
     with open(cstring_file, 'r') as f:
         for line in f:
-            line = line.strip()  # 去掉换行符
+            # 去掉换行符
+            line = line.strip()
             value = dispose_line(line)
 
             if adjustChinese(value):
@@ -143,9 +145,9 @@ def write_to_file(output_data, output_file_path):
         json.dump(output_data, f, ensure_ascii=False, indent=2)
 
 
-# 将翻译后的all_strings、all_translate_strings写入file_path、file_translate_path文件
-def write_ustring_local_file(file_path, file_translate_path, all_strings, all_translate_strings):
-    with open(file_path, 'w', encoding='utf-8') as f:
+# 将翻译后的all_strings、all_translate_strings写入output_file、file_translate_path文件
+def write_ustring_local_file(output_file, file_translate_path, all_strings, all_translate_strings):
+    with open(output_file, 'w', encoding='utf-8') as f:
         json.dump(all_strings, f, ensure_ascii=False, indent=2)
     with open(file_translate_path, 'w', encoding='utf-8') as f:
         json.dump(all_translate_strings, f, ensure_ascii=False, indent=2)
