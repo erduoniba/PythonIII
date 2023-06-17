@@ -90,9 +90,9 @@ def adjustChinese(value):
 
 
 # 将otool命令输出的内容写入文件
-def otool_to_file(input_file, ustring_file):
+def otool_to_file(macho_file, ustring_file):
     # 将otool命令输出的内容写入文件
-    os.system(f"otool  -X -s __TEXT __ustring  {input_file} > {ustring_file}")
+    os.system(f"otool  -X -s __TEXT __ustring  {macho_file} > {ustring_file}")
 
 
 # 读取ustring_file文件，并将其json数组，然后翻译，返回原始数据和翻译后数据
@@ -135,32 +135,36 @@ def write_final_ustring_local_file(file_final_path, all_strings, all_translate_s
 if __name__ == '__main__':
     print("start")
 
-    input_file = sys.argv[1]
-    ustring_file = f"{input_file}_ustring.txt"
-    file_path = f"{input_file}_ustring_output.json"
-    file_translate_path = f"{input_file}_ustring_output_translate.json"
-    file_final_path = f"{input_file}_ustring_output_final.json"
+    macho_file = sys.argv[1]
+    ustring_file = f"{macho_file}_ustring.txt"
+    output_file = f"{macho_file}_ustring_output.json"
+    file_translate_path = f"{macho_file}_ustring_output_translate.json"
+    file_final_path = f"{macho_file}_ustring_output_final.json"
 
+    ##########  翻译+读写全流程 ##########
     # 翻译+读写全流程step1：将otool命令输出的内容写入文件
-    # otool_to_file(input_file, ustring_file)
+    # otool_to_file(macho_file, ustring_file)
 
     # # 翻译+读写全流程step2：读取ustring_file文件，并将其json数组，然后翻译，返回原始数据和翻译后数据
     # all_strings, all_translate_strings = read_ustring_file(ustring_file)
 
-    # # 翻译+读写全流程step3:将翻译后的all_strings、all_translate_strings写入file_path、file_translate_path文件
+    # # 翻译+读写全流程step3:将翻译后的all_strings、all_translate_strings写入output_file、file_translate_path文件
     # write_ustring_local_file(
-    #     file_path, file_translate_path, all_strings, all_translate_strings)
+    #     output_file, file_translate_path, all_strings, all_translate_strings)
 
     # # 翻译+读写全流程step4：将all_strings、all_translate_strings 以 "中文"="English" 的形式写入file_final_path.json文件
     # write_final_ustring_local_file(
     #     file_final_path, all_strings, all_translate_strings)
+    ##########  翻译+读写全流程 ##########
 
-    # 本地文件读取step1 读取file_path、file_translate_path文件，并将其json数组以 如下格式写入ustring_output.json文件
+    ##########  本地文件读取翻译 ##########
+    # 本地文件读取step1 读取output_file、file_translate_path文件，并将其json数组以 如下格式写入ustring_output.json文件
     all_strings, all_translate_strings = read_ustring_local_file(
-        file_path, file_translate_path)
+        output_file, file_translate_path)
 
     # 本地文件读取step2：将all_strings、all_translate_strings 以 "中文"="English" 的形式写入file_final_path.json文件
     write_final_ustring_local_file(
         file_final_path, all_strings, all_translate_strings)
+    ##########  本地文件读取翻译 ##########
 
     print("end")
