@@ -28,16 +28,34 @@ def otool_hex_to_str(otool_output):
     return all_strings
 
 
+def adjustChinese(value):
+    if value:
+        if len(value) > 0:
+            for s in value:
+                if u'\u4e00' <= s <= u'\u9fff':
+                    return True
+    return False
+
+
 # python3 find_chinese_utrings.py HDFindStringDemo
 if __name__ == '__main__':
     print("start")
     input_file = sys.argv[1]
-    os.system(f"otool  -X -s __TEXT __ustring  {input_file} > ustring.txt")
+    ustring_file = f"{input_file}_ustring.txt"
+    os.system(f"otool  -X -s __TEXT __ustring  {input_file} > {ustring_file}")
 
-    with open('ustring.txt', 'r') as f:
+    with open(ustring_file, 'r') as f:
         otool_output = f.read()
     all_strings = otool_hex_to_str(otool_output)
-    with open('ustring_output.json', 'w', encoding='utf-8') as f:
+    # all_stringsk 可能存在非中文的字符串，需要过滤
+    output_data = []
+    for value in all_strings:
+        if adjustChinese(value):
+            output_data.append(value)
+    all_strings = output_data
+
+    file_path = f"{input_file}_ustring_output.json"
+    with open(file_path, 'w', encoding='utf-8') as f:
         json.dump(all_strings, f, ensure_ascii=False, indent=2)
     print("已将字符串以JSON数组形式写入ustring_output.json文件")
     print("end")

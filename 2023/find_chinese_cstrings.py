@@ -52,23 +52,35 @@ def dispose_line(input_str):
     # print("output_str", output_str)
     return hex_to_chinese(output_str)
 
+# 判断value是否是中文
 
-# python3 find_chinese_strings.py HDFindStringDemo
+
+def adjustChinese(value):
+    if value:
+        if len(value) > 0:
+            for s in value:
+                if u'\u4e00' <= s <= u'\u9fff':
+                    return True
+    return False
+
+    # python3 find_chinese_cstrings.py HDFindStringDemo
 if __name__ == '__main__':
     print("start")
     input_file = sys.argv[1]
-    os.system(f"otool -V -X -s __TEXT __cstring {input_file} > cstring.txt")
+    os.system(
+        f"otool -V -X -s __TEXT __cstring {input_file} > {input_file}_cstring.txt")
 
-    file_path = 'cstring.txt'
+    file_path = f"{input_file}_cstring.txt"
     output_data = []
     with open(file_path, 'r') as f:
         for line in f:
             line = line.strip()  # 去掉换行符
             value = dispose_line(line)
-            if value:
+
+            if adjustChinese(value):
                 output_data.append(value)
 
-    output_file_path = 'cstring_output.json'
+    output_file_path = f"{input_file}_cstring_output.json"
     with open(output_file_path, 'w', encoding='utf-8') as f:
         json.dump(output_data, f, ensure_ascii=False, indent=2)
     print("已将字符串以JSON数组形式写入cstring_output.json文件")
