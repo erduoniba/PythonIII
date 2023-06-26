@@ -1,3 +1,4 @@
+import sys
 import re
 from urllib import parse
 
@@ -41,3 +42,31 @@ output_str = convert_octal_to_hex(input_str)
 print("output_str:", output_str)
 
 printChinese(output_str)
+
+
+def otool_hex_to_str(otool_output):
+    # 提取十六进制数据
+    hex_data = re.findall(r'\t([0-9a-fA-F ]+)', otool_output)
+
+    # 将十六进制数据连接成一个字符串
+    hex_str = ''.join(hex_data).replace(' ', '')
+
+    # 将十六进制数据转换为字节串
+    byte_data = bytes.fromhex(hex_str)
+
+    # 尝试以UTF-16编码解码字节串
+    decoded_str = byte_data.decode('utf-16', errors='ignore')
+
+    # 使用正则表达式匹配所有非空字符
+    all_strings = re.findall(r'[^\x00]+', decoded_str)
+
+    return all_strings
+
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("用法: python otool_hex_to_str.py <otool输出>")
+    else:
+        all_strings = otool_hex_to_str(sys.argv[1])
+        for s in all_strings:
+            print(s)
